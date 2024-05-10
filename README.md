@@ -1,23 +1,63 @@
-# Getting Started with Create React App
+# CVE Details Web App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a web application built using React.js to display details of Common Vulnerabilities and Exposures (CVE). It fetches data from an API and presents it in a user-friendly format.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Displays CVE details including ID, description, severity, scores, vector string, configurations, and references.
+- Dynamically renders data fetched from the API.
+- Provides a clean and organized user interface for easy readability.
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React.js
+- JavaScript (ES6+)
+- HTML
+- CSS
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+![cvelist_page](./images/cvelist.jpg)
 
-### `npm test`
+![cvedetails_page](./images/cvedetails.jpg)
+## Getting Started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To run this project locally, follow these steps:
+
+## Installation Guide
+
+### Requirements
+- [Nodejs](https://nodejs.org/en/download)
+- [Mongodb](https://www.mongodb.com/docs/manual/administration/install-community/)
+
+Both should be installed and make sure mongodb is running.
+1. Clone the repository:
+```shell
+git clone https://github.com/sampath-code04/securin-nvd-cve.git
+```
+
+2. Navigate to the project directory:
+```shell
+cd securin-nvd-cve
+```
+
+3. Install dependencies:
+```shell
+npm install
+```
+
+4. Start the development server:
+```shell
+npm start
+```
+
+5. Open your browser and visit `http://localhost:3000/cves/list` to view the application.
+
+## API Used
+
+This project fetches data from the National Vulnerability Database (NVD) API to retrieve CVE details. You can find more information about the API [here](https://nvd.nist.gov/).
+
+## Contributing
+
+Contributions are welcome! If you find any issues or have suggestions for improvement, feel free to open an issue or submit a pull request.
 
 ### `npm run build`
 
