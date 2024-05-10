@@ -15,9 +15,9 @@ This is a web application built using React.js to display details of Common Vuln
 - HTML
 - CSS
 
-![cvelist_page](./images/cvelist.jpg)
+![cvelist_page](./images/cvelist.png)
 
-![cvedetails_page](./images/cvedetails.jpg)
+![cvedetails_page](./images/cvedetails.png)
 ## Getting Started
 
 To run this project locally, follow these steps:
