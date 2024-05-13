@@ -1,5 +1,6 @@
 {
-  "name": "store-db",
+  "name": "securin-nvd-cve",
+  "author": "SAMPATHKUMAR",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
