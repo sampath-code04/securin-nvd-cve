@@ -49,7 +49,9 @@ npm install
 npm start
 ```
 
-5. Open your browser and visit `http://localhost:3000/cves/list` to view the application.
+5. Open your browser and visit `http://localhost:5000/fetch-data` to fetch the data from API call.
+
+6. Open your browser and visit `http://localhost:3000/cves/list` to view the application.
 
 ## API Used
 
