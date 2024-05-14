@@ -1,47 +1,53 @@
-const axios = require('axios');
+// server.js
+
+const express = require('express');
 const mongoose = require('mongoose');
+const axios = require('axios');
+const CVE = require('./models/cve-model'); // Import the data schema
+const cvelist_url = "https://services.nvd.nist.gov/rest/json/cves/2.0"
+const batchSize = 2000; // Set your batch size
+// const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/NVD1', { useNewUrlParser: true, useUnifiedTopology: true });
+// MongoDB connection
+mongoose.connect('mongodb://localhost:27017/NVD_CVE', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 const db = mongoose.connection;
-
-// Define a schema for CVE documents
-const cveSchema = new mongoose.Schema({
-    id: String,
-    published: Date,
-    lastModified: Date,
-    vulnStatus: String,
-    baseScore: Number,
-
-    // Add more fields as needed
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB');
 });
 
-const CVE = mongoose.model('CVE', cveSchema);
+// Fetch data from API and store in MongoDB
+app.get('/fetch-data', async (req, res) => {
+  try {
+    const response = await axios.get(`${cvelist_url}?resultsPerPage=1&startIndex=0`);
+    const totalResults = response.data.totalResults;
+    for (let i = 0; i < totalResults; i += batchSize) {
+      const startIndex = i;
+      const res = await axios.get(`${cvelist_url}?resultsPerPage=${batchSize}&startIndex=${startIndex}`, {
+        method: "GET",
+        redirect: "follow"
+      });
+      const cves = res.data.vulnerabilities.map(cveData => cveData.cve); // Extract CVE data
+      // await CVE.insertMany(cves, { ordered: false }); // Insert batch of CVEs into MongoDB
+      for (const cve of cves) {
+        await CVE.findOneAndUpdate({ id: cve.id }, cve, { upsert: true }); // Update existing document or insert new document
+      }
+      console.log(`Completed: ${cves.length} records inserted, Batch: ${startIndex / batchSize + 1}`);
+       // Add delay between batches
+    }
+    res.send("Success");
+  } catch (error) {
+    console.error('Error fetching and storing data:', error);
+    res.status(500).send('An error occurred while fetching and storing data');
+  }
+});
 
-// Fetch JSON data from the API
-axios.get('https://services.nvd.nist.gov/rest/json/cves/2.0')
-    .then(response => {
-        const data = response.data.vulnerabilities;
-
-        // Store each CVE document in MongoDB
-        data.forEach(cveData => {
-            const cve = new CVE({
-                id: cveData.cve.id,
-                sourceIdentifier:cveData.cve.sourceIdentifier,
-                published: new Date(cveData.cve.published),
-                lastModified: new Date(cveData.cve.lastModified),
-                vulnStatus: cveData.cve.vulnStatus,
-                baseScore:cveData.cve.metrics?.cvssMetricV2?.[0]?.cvssData?.baseScore
-                // Map other fields accordingly
-            });
-            cve.save()
-                .then()
-                .catch(error => console.error(`Error saving CVE ${cve.id} to MongoDB:`, error));
-        });
-    })
-    .catch(error => console.error('Error fetching data from API:', error));
-
-// Close MongoDB connection when the script exits
-db.once('close', () => {
-    console.log('MongoDB connection closed');
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}/fetch-data`);
 });
