@@ -55,7 +55,7 @@ npm start
 
 ## API Used
 
-This project fetches data from the National Vulnerability Database (NVD) API to retrieve CVE details. You can find more information about the API [here](https://nvd.nist.gov/).
+This project fetches data from the National Vulnerability Database (NVD) API to retrieve CVE details. You can find more information about the API [here](https://nvd.nist.gov/developers/vulnerabilities).
 
 ## Contributing
 
